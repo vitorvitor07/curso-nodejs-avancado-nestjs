@@ -8,7 +8,7 @@ import { join } from 'node:path'
   providers: [EnvConfigService],
 })
 export class EnvConfigModule extends ConfigModule {
-  static forRoot(options?: ConfigModuleOptions = {}): DynamicModule {
+  static forRoot(options?: ConfigModuleOptions): DynamicModule {
     return super.forRoot({
       ...options,
       envFilePath: [
