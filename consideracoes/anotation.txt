@@ -51,3 +51,9 @@ cl: nest g module shared/infrastructure/env-config
 Criar service de configuração de ambiente
 
 cl: nest g service shared/infrastructure/env-config
+
+Casos de uso e Entidades não podem haver dependencias
+
+Dependencia para teste
+
+Faker -> Cria informações semânticas para testes
