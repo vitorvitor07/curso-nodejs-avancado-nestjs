@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { EnvConfigService } from '../env-config.service'
-import { EnvConfigModule } from '../env-config.module'
+import { EnvConfigModule } from '../../env-config.module'
+import { EnvConfigService } from '../../env-config.service'
 
 describe('EnvConfigService unit tests', () => {
   let sut: EnvConfigService
@@ -19,6 +19,10 @@ describe('EnvConfigService unit tests', () => {
   })
 
   it('should return the variable PORT', () => {
-    expect(sut.getAppPort()).toBe(3000)
+    expect(sut.getAppPort()).toBe(3001)
+  })
+
+  it('should return the variable NODE_ENV', () => {
+    expect(sut.getNodeEnv()).toBe('test')
   })
 })
