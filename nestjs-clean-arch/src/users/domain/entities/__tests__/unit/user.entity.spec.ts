@@ -7,7 +7,6 @@ describe('UserEntity unit tests', () => {
 
   beforeEach(() => {
     props = UserDataBuilder({})
-    console.log(props)
     sut = new UserEntity(props)
   })
   it('Contructor method', () => {
