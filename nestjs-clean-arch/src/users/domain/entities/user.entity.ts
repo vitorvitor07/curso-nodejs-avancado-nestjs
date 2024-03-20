@@ -15,7 +15,13 @@ export class UserEntity extends Entity<UserProps> {
     super(props, id)
     this.props.createAt = this.props.createAt || new Date()
   }
+  update(value: string): void {
+    this.name = value
+  }
 
+  updatePassword(value: string): void {
+    this.password = value
+  }
   // Getters and setters
   get name(): string {
     return this.props.name
