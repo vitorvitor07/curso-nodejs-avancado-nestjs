@@ -1,8 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
-import { EnvConfigService } from './env-config.service'
 import { ConfigModule } from '@nestjs/config'
 import { ConfigModuleOptions } from '@nestjs/config/dist/interfaces'
 import { join } from 'node:path'
+import { EnvConfigService } from './env-config.service'
 
 @Module({
   providers: [EnvConfigService],

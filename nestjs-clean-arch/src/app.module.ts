@@ -5,8 +5,8 @@ import { EnvConfigModule } from './shared/infrastructure/env-config/env-config.m
 import { UsersModule } from './users/infrastructure/users.module'
 
 @Module({
-  imports: [EnvConfigModule, UsersModule],
+  imports: [UsersModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [EnvConfigModule, AppService],
 })
 export class AppModule {}
