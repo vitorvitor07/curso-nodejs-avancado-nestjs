@@ -39,4 +39,14 @@ describe('InMomeoryRepository unit tests', () => {
 
     expect(entity.toJSON()).toStrictEqual(result.toJSON())
   })
+
+  it('Should find all entities', async () => {
+    const entity = new StubEntity({ name: 'Test Name', price: 50 })
+
+    await sut.insert(entity)
+
+    const result = await sut.findAll()
+
+    expect([entity]).toStrictEqual(result)
+  })
 })
