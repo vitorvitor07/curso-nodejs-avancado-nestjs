@@ -30,7 +30,7 @@ describe('InMomeoryRepository unit tests', () => {
     await expect(sut.findById('fakeId')).rejects.toThrow(NotFoundError)
   })
 
-  it('Should find a entity by id', async () => {
+  it('Should find an entity by id', async () => {
     const entity = new StubEntity({ name: 'Test Name', price: 50 })
 
     await sut.insert(entity)
@@ -48,5 +48,26 @@ describe('InMomeoryRepository unit tests', () => {
     const result = await sut.findAll()
 
     expect([entity]).toStrictEqual(result)
+  })
+
+  it('Should throw error on update when entity not found', async () => {
+    const entity = new StubEntity({ name: 'Test Name', price: 50 })
+
+    await expect(sut.update(entity)).rejects.toThrow(NotFoundError)
+  })
+
+  it('Should update an entity', async () => {
+    const entity = new StubEntity({ name: 'Test Name', price: 50 })
+
+    await sut.insert(entity)
+
+    const entityUpdated = new StubEntity(
+      { name: 'updated', price: 10 },
+      entity.id,
+    )
+
+    await sut.update(entityUpdated)
+
+    expect(entityUpdated.toJSON()).toStrictEqual(sut.itens[0].toJSON())
   })
 })

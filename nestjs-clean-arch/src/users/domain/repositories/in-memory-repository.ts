@@ -24,7 +24,7 @@ export abstract class InMomeoryRepository<E extends Entity>
 
     const index = this.itens.findIndex(item => item.id === entity.id)
 
-    this.itens[index] = { id: entity.id, ...entity }
+    this.itens[index] = entity
   }
 
   async delete(entity: E): Promise<void> {
