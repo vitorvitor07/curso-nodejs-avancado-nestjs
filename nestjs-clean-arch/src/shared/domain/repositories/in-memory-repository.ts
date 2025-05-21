@@ -5,10 +5,10 @@ import { RespositoryInterface } from './repository-contracts'
 export abstract class InMemoryRepository<E extends Entity>
   implements RespositoryInterface<E>
 {
-  itens: E[] = []
+  items: E[] = []
 
   async insert(entity: E): Promise<void> {
-    this.itens.push(entity)
+    this.items.push(entity)
   }
 
   async findById(id: string): Promise<E> {
@@ -16,29 +16,29 @@ export abstract class InMemoryRepository<E extends Entity>
   }
 
   async findAll(): Promise<E[]> {
-    return this.itens
+    return this.items
   }
 
   async update(entity: E): Promise<void> {
     await this._get(entity.id)
 
-    const index = this.itens.findIndex(item => item.id === entity.id)
+    const index = this.items.findIndex(item => item.id === entity.id)
 
-    this.itens[index] = entity
+    this.items[index] = entity
   }
 
   async delete(id: string): Promise<void> {
     await this._get(id)
 
-    const index = this.itens.findIndex(item => item._id === id)
+    const index = this.items.findIndex(item => item._id === id)
 
-    this.itens.splice(index, 1)
+    this.items.splice(index, 1)
   }
 
   protected async _get(id: string): Promise<E> {
     const _id = `${id}`
 
-    const entity = this.itens.find(item => item.id === _id)
+    const entity = this.items.find(item => item.id === _id)
 
     if (!entity) throw new NotFoundError('Entity not found')
 

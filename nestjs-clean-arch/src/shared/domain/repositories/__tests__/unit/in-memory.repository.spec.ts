@@ -23,7 +23,7 @@ describe('InMomeoryRepository unit tests', () => {
 
     await sut.insert(entity)
 
-    expect(entity.toJSON()).toStrictEqual(sut.itens[0].toJSON())
+    expect(entity.toJSON()).toStrictEqual(sut.items[0].toJSON())
   })
 
   it('Should throw error when entity not found', async () => {
@@ -66,7 +66,7 @@ describe('InMomeoryRepository unit tests', () => {
 
     await sut.update(entityUpdated)
 
-    expect(entityUpdated.toJSON()).toStrictEqual(sut.itens[0].toJSON())
+    expect(entityUpdated.toJSON()).toStrictEqual(sut.items[0].toJSON())
   })
 
   it('Should throw error on delete when entity not found', async () => {
@@ -80,6 +80,6 @@ describe('InMomeoryRepository unit tests', () => {
 
     await sut.delete(entity._id)
 
-    expect(sut.itens).toHaveLength(0)
+    expect(sut.items).toHaveLength(0)
   })
 })
