@@ -2,6 +2,7 @@ import { UserEntity } from '@/users/domain/entities/user.entity'
 import { UserRepository } from '@/users/domain/repositories/user.repository'
 import { BcrypthsHashProvider } from '@/users/infrastructure/providers/hash-provider/bcryptjs-hash.provider'
 import { BadRequestError } from '../errors/bad-request-error'
+import { UserOutput } from '../dto/user-output.dto'
 
 export namespace SingUpUseCase {
   export type Input = {
@@ -10,13 +11,7 @@ export namespace SingUpUseCase {
     password: string
   }
 
-  export type Output = {
-    id: string
-    name: string
-    email: string
-    password: string
-    createdAt: Date
-  }
+  export type Output = UserOutput
 
   export class UseCase {
     constructor(
