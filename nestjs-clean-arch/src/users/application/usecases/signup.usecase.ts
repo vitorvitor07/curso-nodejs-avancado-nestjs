@@ -2,8 +2,8 @@ import { UseCase as DefaultUseCase } from '@/shared/application/usecases/use-cas
 import { UserEntity } from '@/users/domain/entities/user.entity'
 import { UserRepository } from '@/users/domain/repositories/user.repository'
 import { BcrypthsHashProvider } from '@/users/infrastructure/providers/hash-provider/bcryptjs-hash.provider'
+import { BadRequestError } from '../../../shared/application/errors/bad-request-error'
 import { UserOutput } from '../dto/user-output.dto'
-import { BadRequestError } from '../errors/bad-request-error'
 
 export namespace SingUpUseCase {
   export type Input = {
