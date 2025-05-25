@@ -61,30 +61,44 @@ describe('UsersController', () => {
 
   it('should update a user', async () => {
     const output: UpdateUserUseCase.Output = props
-    const mockSignInUseCase = {
+    const mockUpdateUserUseCase = {
       execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     }
     const input: UpdateUserDto = {
       name: props.name,
     }
-    sut['updateUserUseCase'] = mockSignInUseCase as any
+    sut['updateUserUseCase'] = mockUpdateUserUseCase as any
     const result = await sut.update(id, input)
-    expect(mockSignInUseCase.execute).toHaveBeenCalledWith({ id, ...input })
+    expect(mockUpdateUserUseCase.execute).toHaveBeenCalledWith({ id, ...input })
     expect(output).toStrictEqual(result)
   })
 
   it('should update password', async () => {
     const output: UpdatePassordUseCase.Output = props
-    const mockSignInUseCase = {
+    const mockUpdatePasswordUseCase = {
       execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     }
     const input: UpdatePasswordDto = {
       oldPassword: '1234',
       password: '4321',
     }
-    sut['updatePasswordUseCase'] = mockSignInUseCase as any
+    sut['updatePasswordUseCase'] = mockUpdatePasswordUseCase as any
     const result = await sut.updatePasoword(id, input)
-    expect(mockSignInUseCase.execute).toHaveBeenCalledWith({ id, ...input })
+    expect(mockUpdatePasswordUseCase.execute).toHaveBeenCalledWith({
+      id,
+      ...input,
+    })
+    expect(output).toStrictEqual(result)
+  })
+
+  it('should delete a user', async () => {
+    const output = undefined
+    const mockDeleteUserUseCase = {
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
+    }
+    sut['deleteUserUseCase'] = mockDeleteUserUseCase as any
+    const result = await sut.remove(id)
+    expect(mockDeleteUserUseCase.execute).toHaveBeenCalledWith({ id })
     expect(output).toStrictEqual(result)
   })
 })
