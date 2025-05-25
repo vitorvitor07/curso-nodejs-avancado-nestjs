@@ -1,5 +1,6 @@
 import { UserOutput } from '@/users/application/dto/user-output.dto'
 import { GetUserUseCase } from '@/users/application/usecases/get-user.usecase'
+import { ListUsersUseCase } from '@/users/application/usecases/list-users.usecase'
 import { SignInUseCase } from '@/users/application/usecases/sign-in.usecase'
 import { SignUpUseCase } from '@/users/application/usecases/sign-up.usecase'
 import { UpdatePassordUseCase } from '@/users/application/usecases/update-password.usecase'
@@ -111,6 +112,27 @@ describe('UsersController', () => {
     sut['getUserUseCase'] = mockGetUserUseCase as any
     const result = await sut.findOne(id)
     expect(mockGetUserUseCase.execute).toHaveBeenCalledWith({ id })
+    expect(output).toStrictEqual(result)
+  })
+
+  it('should list users', async () => {
+    const output: ListUsersUseCase.Output = {
+      items: [props],
+      currentPage: 1,
+      lastPage: 1,
+      perPage: 1,
+      total: 1,
+    }
+    const searchParams = {
+      pege: 1,
+      perPage: 1,
+    }
+    const mockListUsersUseCase = {
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
+    }
+    sut['listUsersUseCase'] = mockListUsersUseCase as any
+    const result = await sut.search(searchParams)
+    expect(mockListUsersUseCase.execute).toHaveBeenCalledWith(searchParams)
     expect(output).toStrictEqual(result)
   })
 })
