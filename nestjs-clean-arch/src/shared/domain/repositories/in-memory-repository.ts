@@ -30,7 +30,7 @@ export abstract class InMemoryRepository<E extends Entity>
   async delete(id: string): Promise<void> {
     await this._get(id)
 
-    const index = this.items.findIndex(item => item._id === id)
+    const index = this.items.findIndex(item => item.id === id)
 
     this.items.splice(index, 1)
   }
