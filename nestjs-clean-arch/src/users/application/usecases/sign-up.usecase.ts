@@ -5,7 +5,7 @@ import { BcrypthsHashProvider } from '@/users/infrastructure/providers/hash-prov
 import { BadRequestError } from '../../../shared/application/errors/bad-request-error'
 import { UserOutput, UserOutputMapper } from '../dto/user-output.dto'
 
-export namespace SingUpUseCase {
+export namespace SignUpUseCase {
   export type Input = {
     name: string
     email: string
