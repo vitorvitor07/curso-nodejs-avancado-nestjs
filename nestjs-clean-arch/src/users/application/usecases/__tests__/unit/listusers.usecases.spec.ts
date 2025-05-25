@@ -13,7 +13,7 @@ describe('ListUsersUseCase unit tests', () => {
     sut = new ListUsersUseCase.UseCase(repository)
   })
 
-  it('To output method', async () => {
+  it('toOutput method', async () => {
     let result = new UserRepository.SearchResult({
       items: [] as any,
       total: 1,
@@ -53,6 +53,65 @@ describe('ListUsersUseCase unit tests', () => {
       currentPage: 1,
       lastPage: 1,
       perPage: 2,
+    })
+  })
+
+  it('should return the users ordered by createdAt', async () => {
+    const createdAt = new Date()
+    const items = [
+      new UserEntity(UserDataBuilder({ createdAt })),
+      new UserEntity(
+        UserDataBuilder({ createdAt: new Date(createdAt.getTime() + 1) }),
+      ),
+    ]
+    repository.items = items
+    const output = await sut.execute({})
+    expect(output).toStrictEqual({
+      items: [...items].reverse().map(item => item.toJSON()),
+      perPage: 15,
+      currentPage: 1,
+      total: 2,
+      lastPage: 1,
+    })
+  })
+
+  it('should return the users using pagination, sort and filter', async () => {
+    const items = [
+      new UserEntity(UserDataBuilder({ name: 'a' })),
+      new UserEntity(UserDataBuilder({ name: 'AA' })),
+      new UserEntity(UserDataBuilder({ name: 'Aa' })),
+      new UserEntity(UserDataBuilder({ name: 'b' })),
+      new UserEntity(UserDataBuilder({ name: 'c' })),
+    ]
+    repository.items = items
+    let output = await sut.execute({
+      page: 1,
+      perPage: 2,
+      sort: 'name',
+      filter: 'a',
+      sortDir: 'asc',
+    })
+    expect(output).toStrictEqual({
+      items: [items[1].toJSON(), items[2].toJSON()],
+      perPage: 2,
+      currentPage: 1,
+      total: 3,
+      lastPage: 2,
+    })
+
+    output = await sut.execute({
+      page: 2,
+      perPage: 2,
+      sort: 'name',
+      filter: 'a',
+      sortDir: 'asc',
+    })
+    expect(output).toStrictEqual({
+      items: [items[0].toJSON()],
+      perPage: 2,
+      currentPage: 2,
+      total: 3,
+      lastPage: 2,
     })
   })
 })
