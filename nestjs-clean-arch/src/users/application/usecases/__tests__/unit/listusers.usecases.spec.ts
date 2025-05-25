@@ -113,5 +113,35 @@ describe('ListUsersUseCase unit tests', () => {
       total: 3,
       lastPage: 2,
     })
+
+    output = await sut.execute({
+      page: 1,
+      perPage: 2,
+      sort: 'name',
+      filter: 'a',
+      sortDir: 'desc',
+    })
+    expect(output).toStrictEqual({
+      items: [items[0].toJSON(), items[2].toJSON()],
+      perPage: 2,
+      currentPage: 1,
+      total: 3,
+      lastPage: 2,
+    })
+
+    output = await sut.execute({
+      page: 2,
+      perPage: 2,
+      sort: 'name',
+      filter: 'a',
+      sortDir: 'desc',
+    })
+    expect(output).toStrictEqual({
+      items: [items[1].toJSON()],
+      perPage: 2,
+      currentPage: 2,
+      total: 3,
+      lastPage: 2,
+    })
   })
 })
