@@ -1,11 +1,11 @@
+import { InvalidCredentialsError } from '@/shared/application/errors/invalid-credentials-error'
 import { UseCase as DefaultUseCase } from '@/shared/application/usecases/use-case'
 import { UserRepository } from '@/users/domain/repositories/user.repository'
 import { BcrypthsHashProvider } from '@/users/infrastructure/providers/hash-provider/bcryptjs-hash.provider'
 import { BadRequestError } from '../../../shared/application/errors/bad-request-error'
 import { UserOutput, UserOutputMapper } from '../dto/user-output.dto'
-import { InvalidCredentialsError } from '@/shared/application/errors/invalid-credentials-error'
 
-export namespace SingInUseCase {
+export namespace SignInUseCase {
   export type Input = {
     email: string
     password: string

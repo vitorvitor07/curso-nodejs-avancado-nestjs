@@ -1,6 +1,6 @@
-import { SingInUseCase } from '@/users/application/usecases/sign-in.usecase'
+import { SignInUseCase } from '@/users/application/usecases/sign-in.usecase'
 
-export class SignInDto implements SingInUseCase.Input {
+export class SignInDto implements SignInUseCase.Input {
   email: string
   password: string
 }

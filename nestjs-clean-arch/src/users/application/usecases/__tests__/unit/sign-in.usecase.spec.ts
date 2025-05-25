@@ -5,17 +5,17 @@ import { UserEntity } from '@/users/domain/entities/user.entity'
 import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder'
 import { UserInMemoryRepository } from '@/users/infrastructure/database/in-memory/repositories/user-in-memory.repository'
 import { BcrypthsHashProvider } from '@/users/infrastructure/providers/hash-provider/bcryptjs-hash.provider'
-import { SingInUseCase } from '../../sign-in.usecase'
+import { SignInUseCase } from '../../sign-in.usecase'
 
 describe('SigninUseCase unit tests', () => {
-  let sut: SingInUseCase.UseCase
+  let sut: SignInUseCase.UseCase
   let repository: UserInMemoryRepository
   let hashProvider: HashProvider
 
   beforeEach(() => {
     repository = new UserInMemoryRepository()
     hashProvider = new BcrypthsHashProvider()
-    sut = new SingInUseCase.UseCase(repository, hashProvider)
+    sut = new SignInUseCase.UseCase(repository, hashProvider)
   })
 
   it('Should create a user', async () => {
