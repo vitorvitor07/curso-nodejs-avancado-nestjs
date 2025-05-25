@@ -21,7 +21,7 @@ import { UpdateUserUseCase } from '../application/usecases/update-user.usecase'
 import { ListUsersDto } from './dto/list-users.dto'
 import { SignInDto } from './dto/sign-in-user.dto'
 import { SignUpDto } from './dto/sign-up-user.dto'
-import { UpdatePasswordUserDto } from './dto/update-password-user.dto'
+import { UpdatePasswordDto } from './dto/update-password-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 
 @Controller('users')
@@ -76,7 +76,7 @@ export class UsersController {
   @Patch(':id')
   async updatePasoword(
     @Param('id') id: string,
-    @Body() updatePasswordDto: UpdatePasswordUserDto,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     return this.updatePasswordUseCase.execute({ id, ...updatePasswordDto })
   }
