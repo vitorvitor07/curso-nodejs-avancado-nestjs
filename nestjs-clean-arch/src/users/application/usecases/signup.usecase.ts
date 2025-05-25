@@ -3,7 +3,7 @@ import { UserEntity } from '@/users/domain/entities/user.entity'
 import { UserRepository } from '@/users/domain/repositories/user.repository'
 import { BcrypthsHashProvider } from '@/users/infrastructure/providers/hash-provider/bcryptjs-hash.provider'
 import { BadRequestError } from '../../../shared/application/errors/bad-request-error'
-import { UserOutput } from '../dto/user-output.dto'
+import { UserOutput, UserOutputMapper } from '../dto/user-output.dto'
 
 export namespace SingUpUseCase {
   export type Input = {
@@ -36,7 +36,7 @@ export namespace SingUpUseCase {
 
       await this.userRepository.insert(entity)
 
-      return entity.toJSON()
+      return UserOutputMapper.toOutput(entity)
     }
   }
 }
