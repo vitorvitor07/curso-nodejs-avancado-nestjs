@@ -1,0 +1,3 @@
+{
+  "jestrunner.jestCommand": "npx dotenv-cli -e .env.test -- jest"
+}
