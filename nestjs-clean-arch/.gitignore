@@ -36,7 +36,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Docker
-. docker/*
+.docker
 !.docker/entrypoint.sh
 !.docker/postgres/Dockerfile
 
@@ -45,3 +45,4 @@ lerna-debug.log*
 .env.development
 .env.test
 tsconfig.tsbuildinfo
+/generated/prisma

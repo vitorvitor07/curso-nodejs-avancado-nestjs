@@ -10,4 +10,4 @@ services:
       - '.docker/dbdata:/var/lib/postgresql/data'
     environment:
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=project-db
+      - POSTGRES_DB=projectdb
