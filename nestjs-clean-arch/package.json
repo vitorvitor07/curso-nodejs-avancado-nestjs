@@ -26,6 +26,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.2.10",
+    "@prisma/client": "^6.8.2",
     "bcryptjs": "^3.0.2",
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.1.13",
