@@ -1,0 +1,42 @@
+import { NotFoundError } from '@/shared/domain/errors/not-found-error'
+import { DatabaseModule } from '@/shared/infrastructure/database/database.module'
+import { setupPrismaTests } from '@/shared/infrastructure/database/prisma/__testing__/setup-prisma.tests'
+import { UserEntity } from '@/users/domain/entities/user.entity'
+import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder'
+import { Test, TestingModule } from '@nestjs/testing'
+import { PrismaClient } from '@prisma/client'
+import { UserPrismaRepository } from '../../user-prisma.repository'
+
+describe('UserPrismaRepository Integration Tests', () => {
+  const prismaService = new PrismaClient()
+  let sut: UserPrismaRepository
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let module: TestingModule
+
+  beforeAll(async () => {
+    setupPrismaTests()
+    module = await Test.createTestingModule({
+      imports: [DatabaseModule.forTest(prismaService)],
+    }).compile()
+  })
+
+  beforeEach(() => {
+    sut = new UserPrismaRepository(prismaService as any)
+    prismaService.user.deleteMany()
+  })
+
+  it('should throw error when entity not foud', async () => {
+    expect(sut.findById('fake-id')).rejects.toThrow(
+      new NotFoundError('UserModel not found using ID fake-id'),
+    )
+  })
+
+  it('should finds a entity by id', async () => {
+    const entity = new UserEntity(UserDataBuilder({}))
+    const newUser = await prismaService.user.create({
+      data: entity.toJSON(),
+    })
+    const output = await sut.findById(newUser.id)
+    expect(output.toJSON()).toStrictEqual(entity.toJSON())
+  })
+})
