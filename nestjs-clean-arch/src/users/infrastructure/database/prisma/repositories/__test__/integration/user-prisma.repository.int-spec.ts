@@ -20,9 +20,9 @@ describe('UserPrismaRepository Integration Tests', () => {
     }).compile()
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     sut = new UserPrismaRepository(prismaService as any)
-    prismaService.user.deleteMany()
+    await prismaService.user.deleteMany()
   })
 
   it('should throw error when entity not foud', async () => {
@@ -47,5 +47,17 @@ describe('UserPrismaRepository Integration Tests', () => {
       where: { id: entity.id },
     })
     expect(result).toStrictEqual(entity.toJSON())
+  })
+
+  it('should return all users', async () => {
+    const entity = new UserEntity(UserDataBuilder({}))
+    await prismaService.user.create({
+      data: entity.toJSON(),
+    })
+    const entities = await sut.findAll()
+    expect(entities).toHaveLength(1)
+    entities.map(item => {
+      expect(item.toJSON()).toStrictEqual(entity.toJSON())
+    })
   })
 })
