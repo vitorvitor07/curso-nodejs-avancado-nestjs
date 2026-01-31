@@ -5,7 +5,7 @@ import { UserRepository } from '@/users/domain/repositories/user.repository'
 import { UserModelMapper } from '../model/user-model.mapper'
 
 export class UserPrismaRepository implements UserRepository.Repository {
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService) {}
 
   sortableFields: string[] = ['name', 'createdAt']
 
@@ -86,8 +86,9 @@ export class UserPrismaRepository implements UserRepository.Repository {
     })
   }
 
-  delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(id: string): Promise<void> {
+    await this._get(id)
+    await this.prismaService.user.delete({ where: { id } })
   }
 
   async _get(id: string): Promise<UserEntity> {
