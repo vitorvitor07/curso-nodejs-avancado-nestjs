@@ -71,7 +71,6 @@ describe('UserPrismaRepository Integration Tests', () => {
         entities.push(
           new UserEntity({
             ...element,
-            name: `User ${index}`,
             email: `test${index}@mail.com`,
             createdAt: new Date(createAt.getTime() + index),
           }),
@@ -83,12 +82,19 @@ describe('UserPrismaRepository Integration Tests', () => {
       })
 
       const searchOutput = await sut.search(new UserRepository.SearchParams())
-
+      const items = searchOutput.items
       expect(searchOutput).toBeInstanceOf(UserRepository.SearchResult)
       expect(searchOutput.total).toBe(16)
+      expect(searchOutput.items).toHaveLength(15)
       searchOutput.items.forEach(item =>
         expect(item).toBeInstanceOf(UserEntity),
       )
+      items
+        .reverse() // converter para a ordem original
+        .forEach((item, index) => {
+          expect(`test${index + 1}@mail.com`).toBe(item.email)
+        })
+      
     })
   })
 })
