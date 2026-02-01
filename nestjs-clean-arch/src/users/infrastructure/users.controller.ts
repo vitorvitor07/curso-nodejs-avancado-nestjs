@@ -24,10 +24,8 @@ import { SignInDto } from './dto/sign-in-user.dto'
 import { SignUpDto } from './dto/sign-up-user.dto'
 import { UpdatePasswordDto } from './dto/update-password-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import {
-  UserCollectionPresenter,
-  UserPresenter,
-} from './presenters/user.presenter'
+import { UserPresenter } from './presenters/user.presenter'
+import { UserCollectionPresenter } from './presenters/user-collection.presenter'
 
 @Controller('users')
 export class UsersController {
