@@ -12,7 +12,7 @@ export namespace DeleteUserUseCase {
     constructor(private readonly userRepository: UserRepository.Repository) {}
 
     async execute(input: Input): Promise<Output> {
-      this.userRepository.delete(input.id)
+      await this.userRepository.delete(input.id)
     }
   }
 }
