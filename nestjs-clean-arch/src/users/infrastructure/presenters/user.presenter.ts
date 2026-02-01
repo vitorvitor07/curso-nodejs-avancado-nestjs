@@ -17,13 +17,3 @@ export class UserPresenter {
     this.createdAt = output.createdAt
   }
 }
-
-export class UserCollectionPresenter extends CollectionPresenter {
-  data: UserPresenter[]
-
-  constructor(output: ListUsersUseCase.Output) {
-    const { items, ...paginationProps } = output
-    super(paginationProps)
-    this.data = items.map(item => new UserPresenter(item))
-  }
-}
