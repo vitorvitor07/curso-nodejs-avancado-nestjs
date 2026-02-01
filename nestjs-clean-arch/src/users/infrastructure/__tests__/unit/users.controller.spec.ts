@@ -7,6 +7,7 @@ import { UpdatePassordUseCase } from '@/users/application/usecases/update-passwo
 import { UpdateUserUseCase } from '@/users/application/usecases/update-user.usecase'
 import { UpdatePasswordDto } from '../../dto/update-password-user.dto'
 import { UpdateUserDto } from '../../dto/update-user.dto'
+import { UserPresenter } from '../../presenters/user.presenter'
 import { UsersController } from '../../users.controller'
 
 describe('UsersController', () => {
@@ -41,9 +42,10 @@ describe('UsersController', () => {
       password: '1234',
     }
     sut['signUpUseCase'] = mockSignUpUseCase as any
-    const result = await sut.create(input)
+    const presenter = await sut.create(input)
+    expect(presenter).toStrictEqual(new UserPresenter(output))
+    expect(presenter).toBeInstanceOf(UserPresenter)
     expect(mockSignUpUseCase.execute).toHaveBeenCalledWith(input)
-    expect(output).toStrictEqual(result)
   })
 
   it('should authenticate a user', async () => {
@@ -56,9 +58,10 @@ describe('UsersController', () => {
       password: '1234',
     }
     sut['signInUseCase'] = mockSignInUseCase as any
-    const result = await sut.login(input)
+    const presenter = await sut.login(input)
+    expect(presenter).toStrictEqual(new UserPresenter(output))
+    expect(presenter).toBeInstanceOf(UserPresenter)
     expect(mockSignInUseCase.execute).toHaveBeenCalledWith(input)
-    expect(output).toStrictEqual(result)
   })
 
   it('should update a user', async () => {
@@ -70,9 +73,10 @@ describe('UsersController', () => {
       name: props.name,
     }
     sut['updateUserUseCase'] = mockUpdateUserUseCase as any
-    const result = await sut.update(id, input)
+    const presenter = await sut.update(id, input)
+    expect(presenter).toStrictEqual(new UserPresenter(output))
+    expect(presenter).toBeInstanceOf(UserPresenter)
     expect(mockUpdateUserUseCase.execute).toHaveBeenCalledWith({ id, ...input })
-    expect(output).toStrictEqual(result)
   })
 
   it('should update password', async () => {
@@ -85,12 +89,13 @@ describe('UsersController', () => {
       password: '4321',
     }
     sut['updatePasswordUseCase'] = mockUpdatePasswordUseCase as any
-    const result = await sut.updatePasoword(id, input)
+    const presenter = await sut.updatePasoword(id, input)
+    expect(presenter).toStrictEqual(new UserPresenter(output))
+    expect(presenter).toBeInstanceOf(UserPresenter)
     expect(mockUpdatePasswordUseCase.execute).toHaveBeenCalledWith({
       id,
       ...input,
     })
-    expect(output).toStrictEqual(result)
   })
 
   it('should delete a user', async () => {
@@ -110,9 +115,10 @@ describe('UsersController', () => {
       execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     }
     sut['getUserUseCase'] = mockGetUserUseCase as any
-    const result = await sut.findOne(id)
+    const presenter = await sut.findOne(id)
+    expect(presenter).toStrictEqual(new UserPresenter(output))
+    expect(presenter).toBeInstanceOf(UserPresenter)
     expect(mockGetUserUseCase.execute).toHaveBeenCalledWith({ id })
-    expect(output).toStrictEqual(result)
   })
 
   it('should list users', async () => {
