@@ -26,6 +26,7 @@ import { UpdatePasswordDto } from './dto/update-password-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserPresenter } from './presenters/user.presenter'
 import { UserCollectionPresenter } from './presenters/user-collection.presenter'
+import { AuthService } from '@/auth/infrastructure/auth.service'
 
 @Controller('users')
 export class UsersController {
@@ -50,6 +51,9 @@ export class UsersController {
   @Inject(DeleteUserUseCase.UseCase)
   private deleteUserUseCase: DeleteUserUseCase.UseCase
 
+  @Inject(AuthService)
+  private authService: AuthService
+
   static userToResponse(output: UserOutput) {
     return new UserPresenter(output)
   }
@@ -68,7 +72,7 @@ export class UsersController {
   @Post('login')
   async login(@Body() signInDto: SignInDto) {
     const output = await this.signInUseCase.execute(signInDto)
-    return UsersController.userToResponse(output)
+    return this.authService.generateJwt(output.id)
   }
 
   @Get()
