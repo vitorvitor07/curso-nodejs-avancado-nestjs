@@ -7,6 +7,7 @@ import { UpdatePassordUseCase } from '@/users/application/usecases/update-passwo
 import { UpdateUserUseCase } from '@/users/application/usecases/update-user.usecase'
 import { UpdatePasswordDto } from '../../dto/update-password-user.dto'
 import { UpdateUserDto } from '../../dto/update-user.dto'
+import { UserCollectionPresenter } from '../../presenters/user-collection.presenter'
 import { UserPresenter } from '../../presenters/user.presenter'
 import { UsersController } from '../../users.controller'
 
@@ -137,8 +138,9 @@ describe('UsersController', () => {
       execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     }
     sut['listUsersUseCase'] = mockListUsersUseCase as any
-    const result = await sut.search(searchParams)
+    const presenter = await sut.search(searchParams)
+    expect(presenter).toBeInstanceOf(UserCollectionPresenter)
+    expect(presenter).toEqual(new UserCollectionPresenter(output))
     expect(mockListUsersUseCase.execute).toHaveBeenCalledWith(searchParams)
-    expect(output).toStrictEqual(result)
   })
 })
