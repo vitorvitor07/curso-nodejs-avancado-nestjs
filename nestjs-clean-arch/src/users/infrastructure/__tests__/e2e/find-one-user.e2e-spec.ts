@@ -10,7 +10,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { PrismaClient } from '@prisma/client'
 import { instanceToPlain } from 'class-transformer'
 import request from 'supertest'
-import { UpdateUserDto } from '../../dto/update-user.dto'
 import { UsersController } from '../../users.controller'
 import { UsersModule } from '../../users.module'
 
@@ -56,15 +55,15 @@ describe('UsersController e2e tests', () => {
       expect(res.body.data).toStrictEqual(serialized)
     })
 
-    // it('should return a error with 404 when throw NoutFoundError with invalid Id', async () => {
-    //   await request(app.getHttpServer())
-    //     .get(`/users/fake-id`)
-    //     .expect(404)
-    //     .expect({
-    //       statusCode: 404,
-    //       error: 'Not Found',
-    //       message: 'UserModel not found using ID fake-id',
-    //     })
-    // })
+    it('should return a error with 404 when throw NoutFoundError with invalid Id', async () => {
+      await request(app.getHttpServer())
+        .get(`/users/fake-id`)
+        .expect(404)
+        .expect({
+          statusCode: 404,
+          error: 'Not Found',
+          message: 'UserModel not found using ID fake-id',
+        })
+    })
   })
 })
