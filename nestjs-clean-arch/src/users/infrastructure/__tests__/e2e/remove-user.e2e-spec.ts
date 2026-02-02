@@ -1,4 +1,5 @@
 import { applyGlobalConfig } from '@/global-config'
+import { HashProvider } from '@/shared/application/providers/hash-provider'
 import { DatabaseModule } from '@/shared/infrastructure/database/database.module'
 import { setupPrismaTests } from '@/shared/infrastructure/database/prisma/__testing__/setup-prisma.tests'
 import { EnvConfigModule } from '@/shared/infrastructure/env-config/env-config.module'
@@ -9,6 +10,7 @@ import { INestApplication } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { PrismaClient } from '@prisma/client'
 import request from 'supertest'
+import { BcrypthsHashProvider } from '../../providers/hash-provider/bcryptjs-hash.provider'
 import { UsersModule } from '../../users.module'
 
 describe('UsersController e2e tests', () => {
@@ -17,6 +19,9 @@ describe('UsersController e2e tests', () => {
   let repository: UserRepository.Repository
   const prismaService = new PrismaClient()
   let entity: UserEntity
+  let hashProvider: HashProvider
+  let hashPassword: string
+  let accessToken: string
 
   beforeAll(async () => {
     setupPrismaTests()
@@ -31,12 +36,25 @@ describe('UsersController e2e tests', () => {
     applyGlobalConfig(app)
     app.init()
     repository = module.get<UserRepository.Repository>('UserRepository')
+    hashProvider = new BcrypthsHashProvider()
+    hashPassword = await hashProvider.generateHash('1234')
   })
 
   beforeEach(async () => {
     await prismaService.user.deleteMany()
-    entity = new UserEntity(UserDataBuilder({}))
+    entity = new UserEntity(
+      UserDataBuilder({ email: 'a@a.com', password: hashPassword }),
+    )
     await repository.insert(entity)
+    const loginResponse = await request(app.getHttpServer())
+      .post('/users/login')
+      .send({
+        email: 'a@a.com',
+        password: '1234',
+      })
+      .expect(200)
+
+    accessToken = loginResponse.body.accessToken
   })
 
   afterAll(() => {
@@ -47,18 +65,30 @@ describe('UsersController e2e tests', () => {
     it('should remove a user', async () => {
       await request(app.getHttpServer())
         .delete(`/users/${entity._id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(204)
         .expect({})
     })
 
     it('should return a error with 404 when throw NoutFoundError with invalid Id', async () => {
       await request(app.getHttpServer())
-        .get(`/users/fake-id`)
+        .delete(`/users/fake-id`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(404)
         .expect({
           statusCode: 404,
           error: 'Not Found',
           message: 'UserModel not found using ID fake-id',
+        })
+    })
+
+    it('should return a error with 401 when the request is not authorized', async () => {
+      await request(app.getHttpServer())
+        .delete(`/users/fake-id`)
+        .expect(401)
+        .expect({
+          statusCode: 401,
+          message: 'Unauthorized',
         })
     })
   })
