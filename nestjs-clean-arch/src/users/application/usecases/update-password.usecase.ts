@@ -1,4 +1,4 @@
-import { InvalidPassowordError } from '@/shared/application/errors/invalid-passoword-error'
+import { InvalidPasswordError } from '@/shared/application/errors/invalid-passoword-error'
 import { HashProvider } from '@/shared/application/providers/hash-provider'
 import { UseCase as DefaultUseCase } from '@/shared/application/usecases/use-case'
 import { UserRepository } from '@/users/domain/repositories/user.repository'
@@ -17,12 +17,12 @@ export namespace UpdatePassordUseCase {
     constructor(
       private readonly userRepository: UserRepository.Repository,
       private readonly hashProvider: HashProvider,
-    ) {}
+    ) { }
 
     async execute(input: Input): Promise<Output> {
       const entity = await this.userRepository.findById(input.id)
       if (!input.password || !input.oldPassword)
-        throw new InvalidPassowordError(
+        throw new InvalidPasswordError(
           'Old password and new password is required',
         )
       const checkOldPassword = await this.hashProvider.compareHash(
@@ -30,7 +30,7 @@ export namespace UpdatePassordUseCase {
         entity.password,
       )
       if (!checkOldPassword)
-        throw new InvalidPassowordError('Old password does not match')
+        throw new InvalidPasswordError('Old password does not match')
 
       const hashPassword = await this.hashProvider.generateHash(input.password)
       entity.updatePassword(hashPassword)

@@ -1,4 +1,4 @@
-import { InvalidPassowordError } from '@/shared/application/errors/invalid-passoword-error'
+import { InvalidPasswordError } from '@/shared/application/errors/invalid-passoword-error'
 import { HashProvider } from '@/shared/application/providers/hash-provider'
 import { NotFoundError } from '@/shared/domain/errors/not-found-error'
 import { UserEntity } from '@/users/domain/entities/user.entity'
@@ -34,7 +34,7 @@ describe('UpdatePasswordUseCase unit tests', () => {
     expect(() =>
       sut.execute({ id: entity.id, password: '', oldPassword: 'fake' }),
     ).rejects.toThrow(
-      new InvalidPassowordError('Old password and new password is required'),
+      new InvalidPasswordError('Old password and new password is required'),
     )
   })
 
@@ -44,7 +44,7 @@ describe('UpdatePasswordUseCase unit tests', () => {
     expect(() =>
       sut.execute({ id: entity.id, password: 'fake', oldPassword: '' }),
     ).rejects.toThrow(
-      new InvalidPassowordError('Old password and new password is required'),
+      new InvalidPasswordError('Old password and new password is required'),
     )
   })
 
@@ -53,7 +53,7 @@ describe('UpdatePasswordUseCase unit tests', () => {
     repository.items = [entity]
     expect(() =>
       sut.execute({ id: entity.id, password: 'new', oldPassword: '124' }),
-    ).rejects.toThrow(new InvalidPassowordError('Old password does not match'))
+    ).rejects.toThrow(new InvalidPasswordError('Old password does not match'))
   })
 
   it('Should update a password', async () => {

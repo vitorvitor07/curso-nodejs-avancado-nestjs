@@ -1,4 +1,4 @@
-import { InvalidPassowordError } from '@/shared/application/errors/invalid-passoword-error'
+import { InvalidPasswordError } from '@/shared/application/errors/invalid-passoword-error'
 import { HashProvider } from '@/shared/application/providers/hash-provider'
 import { NotFoundError } from '@/shared/domain/errors/not-found-error'
 import { DatabaseModule } from '@/shared/infrastructure/database/database.module'
@@ -61,7 +61,7 @@ describe('UpdatePasswordUseCase Integration Tests', () => {
         password: 'new-password',
       }),
     ).rejects.toThrow(
-      new InvalidPassowordError('Old password and new password is required'),
+      new InvalidPasswordError('Old password and new password is required'),
     )
   })
 
@@ -77,7 +77,7 @@ describe('UpdatePasswordUseCase Integration Tests', () => {
         password: '',
       }),
     ).rejects.toThrow(
-      new InvalidPassowordError('Old password and new password is required'),
+      new InvalidPasswordError('Old password and new password is required'),
     )
   })
 

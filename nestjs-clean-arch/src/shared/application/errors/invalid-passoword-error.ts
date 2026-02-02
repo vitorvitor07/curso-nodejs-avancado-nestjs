@@ -1,6 +1,6 @@
-export class InvalidPassowordError extends Error {
+export class InvalidPasswordError extends Error {
   constructor(public message: string) {
     super(message)
-    this.name = 'InvalidPassowordError'
+    this.name = 'InvalidPasswordError'
   }
 }
