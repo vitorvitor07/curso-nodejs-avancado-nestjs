@@ -2,7 +2,9 @@ import { applyGlobalConfig } from '@/global-config'
 import { DatabaseModule } from '@/shared/infrastructure/database/database.module'
 import { setupPrismaTests } from '@/shared/infrastructure/database/prisma/__testing__/setup-prisma.tests'
 import { EnvConfigModule } from '@/shared/infrastructure/env-config/env-config.module'
+import { UserEntity } from '@/users/domain/entities/user.entity'
 import { UserRepository } from '@/users/domain/repositories/user.repository'
+import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder'
 import { INestApplication } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { PrismaClient } from '@prisma/client'
@@ -126,5 +128,17 @@ describe('POST /users', () => {
       .expect(422)
     expect(res.body.error).toBe('Unprocessable Entity')
     expect(res.body.message).toEqual(['property xpto should not exist'])
+  })
+
+  it('should return a error with 409 code when email is duplicated', async () => {
+    const entity = new UserEntity(UserDataBuilder({ ...signUpDto }))
+    await repository.insert(entity)
+    const res = await request(app.getHttpServer())
+      .post('/users')
+      .send(signUpDto)
+      .expect(409)
+    console.log(res.body)
+    // expect(res.body.error).toBe('Unprocessable Entity')
+    // expect(res.body.message).toEqual(['property xpto should not exist'])
   })
 })
