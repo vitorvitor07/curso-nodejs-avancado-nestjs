@@ -1,3 +1,5 @@
+import { AuthGuard } from '@/auth/infrastructure/auth.guard'
+import { AuthService } from '@/auth/infrastructure/auth.service'
 import {
   Body,
   Controller,
@@ -10,6 +12,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { UserOutput } from '../application/dto/user-output.dto'
 import { DeleteUserUseCase } from '../application/usecases/delete-user.usecase'
@@ -24,9 +27,8 @@ import { SignInDto } from './dto/sign-in-user.dto'
 import { SignUpDto } from './dto/sign-up-user.dto'
 import { UpdatePasswordDto } from './dto/update-password-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { UserPresenter } from './presenters/user.presenter'
 import { UserCollectionPresenter } from './presenters/user-collection.presenter'
-import { AuthService } from '@/auth/infrastructure/auth.service'
+import { UserPresenter } from './presenters/user.presenter'
 
 @Controller('users')
 export class UsersController {
@@ -75,18 +77,21 @@ export class UsersController {
     return this.authService.generateJwt(output.id)
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   async search(@Query() searchParams: ListUsersDto) {
     const output = await this.listUsersUseCase.execute(searchParams)
     return UsersController.listUsersToRespose(output)
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const output = await this.getUserUseCase.execute({ id })
     return UsersController.userToResponse(output)
   }
 
+  @UseGuards(AuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const output = await this.updateUserUseCase.execute({
@@ -96,6 +101,7 @@ export class UsersController {
     return UsersController.userToResponse(output)
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async updatePasoword(
     @Param('id') id: string,
@@ -108,6 +114,7 @@ export class UsersController {
     return UsersController.userToResponse(output)
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   @Delete(':id')
   async remove(@Param('id') id: string) {
