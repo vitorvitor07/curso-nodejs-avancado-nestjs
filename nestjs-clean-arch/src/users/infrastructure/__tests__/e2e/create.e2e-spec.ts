@@ -1,3 +1,4 @@
+import { applyGlobalConfig } from '@/global-config'
 import { DatabaseModule } from '@/shared/infrastructure/database/database.module'
 import { setupPrismaTests } from '@/shared/infrastructure/database/prisma/__testing__/setup-prisma.tests'
 import { EnvConfigModule } from '@/shared/infrastructure/env-config/env-config.module'
@@ -11,7 +12,7 @@ import { SignUpDto } from '../../dto/sign-up-user.dto'
 import { UsersController } from '../../users.controller'
 import { UsersModule } from '../../users.module'
 
-describe('UsersController', () => {
+describe('POST /users', () => {
   let app: INestApplication
   let module: TestingModule
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,6 +30,7 @@ describe('UsersController', () => {
       ],
     }).compile()
     app = module.createNestApplication()
+    applyGlobalConfig(app)
     app.init()
     repository = module.get<UserRepository.Repository>('UserRepository')
   })
