@@ -133,12 +133,14 @@ describe('POST /users', () => {
   it('should return a error with 409 code when email is duplicated', async () => {
     const entity = new UserEntity(UserDataBuilder({ ...signUpDto }))
     await repository.insert(entity)
-    const res = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/users')
       .send(signUpDto)
       .expect(409)
-    console.log(res.body)
-    // expect(res.body.error).toBe('Unprocessable Entity')
-    // expect(res.body.message).toEqual(['property xpto should not exist'])
+      .expect({
+        statusCode: 409,
+        error: 'Conflict',
+        message: 'Email address already used',
+      })
   })
 })
