@@ -12,8 +12,10 @@ import { UserRepository } from '../domain/repositories/user.repository'
 import { UserPrismaRepository } from './database/prisma/repositories/user-prisma.repository'
 import { BcrypthsHashProvider } from './providers/hash-provider/bcryptjs-hash.provider'
 import { UsersController } from './users.controller'
+import { AuthModule } from '@/auth/infrastructure/auth.module'
 
 @Module({
+  imports: [AuthModule],
   controllers: [UsersController],
   providers: [
     {
