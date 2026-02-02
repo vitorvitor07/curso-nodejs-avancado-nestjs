@@ -63,7 +63,7 @@ describe('POST /users', () => {
     expect(res.body.data).toStrictEqual(serialized)
   })
 
-  it('should return a error with 422 code when body is invalid', async () => {
+  it('should return a error with 422 code when request body is invalid', async () => {
     const res = await request(app.getHttpServer())
       .post('/users')
       .send({})
@@ -78,5 +78,53 @@ describe('POST /users', () => {
       'password should not be empty',
       'password must be a string',
     ])
+  })
+
+  it('should return a error with 422 code when name field is invalid', async () => {
+    delete signUpDto.name
+    const res = await request(app.getHttpServer())
+      .post('/users')
+      .send(signUpDto)
+      .expect(422)
+    expect(res.body.error).toBe('Unprocessable Entity')
+    expect(res.body.message).toEqual([
+      'name should not be empty',
+      'name must be a string',
+    ])
+  })
+  it('should return a error with 422 code when email field is invalid', async () => {
+    delete signUpDto.email
+    const res = await request(app.getHttpServer())
+      .post('/users')
+      .send(signUpDto)
+      .expect(422)
+    expect(res.body.error).toBe('Unprocessable Entity')
+    expect(res.body.message).toEqual([
+      'email should not be empty',
+      'email must be an email',
+      'email must be a string',
+    ])
+  })
+
+  it('should return a error with 422 code when password field is invalid', async () => {
+    delete signUpDto.password
+    const res = await request(app.getHttpServer())
+      .post('/users')
+      .send(signUpDto)
+      .expect(422)
+    expect(res.body.error).toBe('Unprocessable Entity')
+    expect(res.body.message).toEqual([
+      'password should not be empty',
+      'password must be a string',
+    ])
+  })
+
+  it('should return a error with 422 code with invalid field provided', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/users')
+      .send(Object.assign(signUpDto, { xpto: 'fake' }))
+      .expect(422)
+    expect(res.body.error).toBe('Unprocessable Entity')
+    expect(res.body.message).toEqual(['property xpto should not exist'])
   })
 })
