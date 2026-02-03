@@ -146,12 +146,12 @@ export class UsersController {
     },
   })
   @ApiResponse({
-    status: 422,
-    description: 'Parâmetros de consulta inválidos',
-  })
-  @ApiResponse({
     status: 401,
     description: 'Acesso não autorizado',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Parâmetros de consulta inválidos',
   })
   @UseGuards(AuthGuard)
   @Get()
@@ -160,6 +160,15 @@ export class UsersController {
     return UsersController.listUsersToRespose(output)
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso não autorizado',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Id não encontrado',
+  })
   @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
