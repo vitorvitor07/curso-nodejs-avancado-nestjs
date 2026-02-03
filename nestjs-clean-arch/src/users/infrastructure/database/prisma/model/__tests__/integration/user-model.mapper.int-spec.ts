@@ -14,8 +14,8 @@ describe('UserModelMapper Integration Tests', () => {
     await prismaService.$connect()
   })
 
-  beforeEach(() => {
-    prismaService.user.deleteMany()
+  beforeEach(async () => {
+    await prismaService.user.deleteMany()
     props = {
       id: '569e44af-c8ea-4288-9784-292c9079356e',
       name: 'Test Name',
