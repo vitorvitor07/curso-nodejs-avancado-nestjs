@@ -36,7 +36,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { UserCollectionPresenter } from './presenters/user-collection.presenter'
 import { UserPresenter } from './presenters/user.presenter'
 
-@ApiTags('Users')
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   @Inject(SignUpUseCase.UseCase) // privider class name
