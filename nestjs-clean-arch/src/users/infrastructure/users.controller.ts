@@ -77,7 +77,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 422,
-    description: 'Corpo requisição com dados inválidos',
+    description: 'Corpo da requisição com dados inválidos',
   })
   @Post()
   async create(@Body() signUpDto: SignUpDto) {
@@ -106,7 +106,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 422,
-    description: 'Corpo requisição com dados inválidos',
+    description: 'Corpo da requisição com dados inválidos',
   })
   @HttpCode(200)
   @Post('login')
@@ -176,6 +176,18 @@ export class UsersController {
     return UsersController.userToResponse(output)
   }
 
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso não autorizado',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Id não encontrado',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Corpo da requisição com dados inválidos',
+  })
   @UseGuards(AuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
