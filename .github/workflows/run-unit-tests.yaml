@@ -10,4 +10,20 @@ jobs:
     # definir passos necessários para baixar o app e rodar os testes
 
     steps:
-      
+      - uses: actions/checkout@v6 # baixar codigo do app no ubuntu
+
+      - uses: actions/setup-node@v6 # configurar o node
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - run: npm ci # instalar dependencia sem interação
+
+      - run: npm run test:unit
+        env:
+          PORT: 3000
+          NODE_ENV: test
+          JWT_SECRET: fake_secret
+          JWT_EXPIRES_IN: 864000
+          DATABASE_URL: fake_url
+
