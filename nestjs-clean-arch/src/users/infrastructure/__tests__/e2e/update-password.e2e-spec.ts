@@ -17,7 +17,6 @@ import { UsersModule } from '../../users.module'
 describe('UsersController e2e tests', () => {
   let app: INestApplication
   let module: TestingModule
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let repository: UserRepository.Repository
   let updatePasswordDto: UpdatePasswordDto
   const prismaService = new PrismaClient()
@@ -36,59 +35,49 @@ describe('UsersController e2e tests', () => {
     }).compile()
     app = module.createNestApplication()
     applyGlobalConfig(app)
-    app.init()
+    await app.init()
     repository = module.get<UserRepository.Repository>('UserRepository')
     hashProvider = new BcrypthsHashProvider()
-
-    const loginResponse = await request(app.getHttpServer())
-      .post('/users/login')
-      .send({
-        email: 'a@a.com',
-        password: 'oldpass',
-      })
-      .expect(200)
-
-    accessToken = loginResponse.body.accessToken
   })
 
   beforeEach(async () => {
     updatePasswordDto = {
-      oldPassword: 'oldpass',
-      password: 'newpass',
+      password: 'new_password',
+      oldPassword: 'old_password',
     }
     await prismaService.user.deleteMany()
-    const hashPassword = await hashProvider.generateHash('oldpass')
+    const hashPassword = await hashProvider.generateHash('old_password')
     entity = new UserEntity(
       UserDataBuilder({ email: 'a@a.com', password: hashPassword }),
     )
     await repository.insert(entity)
+
+    const loginResponse = await request(app.getHttpServer())
+      .post('/users/login')
+      .send({ email: 'a@a.com', password: 'old_password' })
+      .expect(200)
+    accessToken = loginResponse.body.accessToken
   })
 
-  afterAll(() => {
-    module.close()
-  })
-
-  describe('/PATCH /users', () => {
-    it('should updated a password', async () => {
+  describe('POST /users', () => {
+    it('should update a password', async () => {
       const res = await request(app.getHttpServer())
         .patch(`/users/${entity._id}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updatePasswordDto)
         .expect(200)
-
       expect(Object.keys(res.body)).toStrictEqual(['data'])
-
       const user = await repository.findById(res.body.data.id)
       const checkNewPassword = await hashProvider.compareHash(
-        'newpass',
+        'new_password',
         user.password,
       )
       expect(checkNewPassword).toBeTruthy()
     })
 
-    it('should return a error with 422 code when request body is invalid', async () => {
+    it('should return a error with 422 code when the request body is invalid', async () => {
       const res = await request(app.getHttpServer())
-        .patch(`/users/${entity._id}`)
+        .patch('/users/fakeId')
         .set('Authorization', `Bearer ${accessToken}`)
         .send({})
         .expect(422)
@@ -101,17 +90,17 @@ describe('UsersController e2e tests', () => {
       ])
     })
 
-    it('should return a error with 404 code when throw NorFoundError with invalid id', async () => {
+    it('should return a error with 404 code when throw NotFoundError with invalid id', async () => {
       const res = await request(app.getHttpServer())
         .patch('/users/fakeId')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updatePasswordDto)
         .expect(404)
       expect(res.body.error).toBe('Not Found')
-      expect(res.body.message).toEqual(`UserModel not found using ID fakeId`)
+      expect(res.body.message).toEqual('UserModel not found using ID fakeId')
     })
 
-    it('should return a error with 422 code when password field is invalid', async () => {
+    it('should return a error with 422 code when the password field is invalid', async () => {
       delete updatePasswordDto.password
       const res = await request(app.getHttpServer())
         .patch(`/users/${entity._id}`)
@@ -125,7 +114,7 @@ describe('UsersController e2e tests', () => {
       ])
     })
 
-    it('should return a error with 422 code when oldPassword field is invalid', async () => {
+    it('should return a error with 422 code when the oldPassword field is invalid', async () => {
       delete updatePasswordDto.oldPassword
       const res = await request(app.getHttpServer())
         .patch(`/users/${entity._id}`)
@@ -153,9 +142,9 @@ describe('UsersController e2e tests', () => {
         })
     })
 
-    it('should return a error with 401 when the request is not authorized', async () => {
+    it('should return a error with 401 code when the request is not authorized', async () => {
       await request(app.getHttpServer())
-        .patch(`/users/fake-id`)
+        .patch('/users/fakeId')
         .expect(401)
         .expect({
           statusCode: 401,
