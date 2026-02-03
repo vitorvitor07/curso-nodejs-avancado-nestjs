@@ -14,6 +14,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger'
 import { UserOutput } from '../application/dto/user-output.dto'
 import { DeleteUserUseCase } from '../application/usecases/delete-user.usecase'
 import { GetUserUseCase } from '../application/usecases/get-user.usecase'
@@ -30,6 +36,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { UserCollectionPresenter } from './presenters/user-collection.presenter'
 import { UserPresenter } from './presenters/user.presenter'
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   @Inject(SignUpUseCase.UseCase) // privider class name
@@ -64,6 +71,14 @@ export class UsersController {
     return new UserCollectionPresenter(output)
   }
 
+  @ApiResponse({
+    status: 409,
+    description: 'Conflito de email',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Corpo requisição com dados inválidos',
+  })
   @Post()
   async create(@Body() signUpDto: SignUpDto) {
     const output = await this.signUpUseCase.execute(signUpDto)
@@ -77,6 +92,44 @@ export class UsersController {
     return this.authService.generateJwt(output.id)
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: {
+        meta: {
+          type: 'object',
+          properties: {
+            total: {
+              type: 'number',
+            },
+            currentPage: {
+              type: 'number',
+            },
+            lastPage: {
+              type: 'number',
+            },
+            perPage: {
+              type: 'number',
+            },
+          },
+        },
+        data: {
+          type: 'array',
+          items: { $ref: getSchemaPath(UserPresenter) },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Parâmetros de consulta inválidos',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso não autorizado',
+  })
   @UseGuards(AuthGuard)
   @Get()
   async search(@Query() searchParams: ListUsersDto) {
