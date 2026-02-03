@@ -21,7 +21,7 @@ jobs:
 
       - run: npm run test:unit
         env:
-          PORT: 3000
+          PORT: 3001
           NODE_ENV: test
           JWT_SECRET: fake_secret
           JWT_EXPIRES_IN: 86400
