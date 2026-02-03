@@ -85,6 +85,29 @@ export class UsersController {
     return UsersController.userToResponse(output)
   }
 
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: {
+        accessToken: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Credenciais inválidas',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Email não encontrado',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Corpo requisição com dados inválidos',
+  })
   @HttpCode(200)
   @Post('login')
   async login(@Body() signInDto: SignInDto) {
